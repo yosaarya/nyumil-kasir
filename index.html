@@ -30,9 +30,28 @@
             --transition: all 0.3s ease;
         }
         
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Poppins', sans-serif; background: var(--gray-light); color: #333; line-height: 1.6; }
-        .container { max-width: 100%; margin: 0 auto; padding: 15px; }
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        body { 
+            font-family: 'Poppins', sans-serif; 
+            background: var(--gray-light); 
+            color: #333; 
+            line-height: 1.6;
+            user-select: none;
+            -webkit-user-select: none;
+            touch-action: manipulation;
+        }
+        
+        .container { 
+            max-width: 100%; 
+            margin: 0 auto; 
+            padding: 15px; 
+        }
         
         /* Header */
         .header {
@@ -43,16 +62,54 @@
             margin-bottom: 20px;
             box-shadow: var(--shadow);
             text-align: center;
+            position: relative;
         }
-        .header h1 { font-size: 1.8rem; margin-bottom: 5px; }
-        .header p { opacity: 0.9; font-size: 0.9rem; }
+        .header h1 { 
+            font-size: 1.8rem; 
+            margin-bottom: 5px; 
+        }
+        .header p { 
+            opacity: 0.9; 
+            font-size: 0.9rem; 
+        }
         
         /* Tabs */
-        .tabs { display: flex; background: white; border-radius: var(--radius); margin-bottom: 20px; overflow: hidden; box-shadow: var(--shadow); }
-        .tab { flex: 1; padding: 15px; text-align: center; cursor: pointer; transition: var(--transition); font-weight: 600; font-size: 0.9rem; }
-        .tab.active { background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: white; }
-        .tab-content { display: none; }
-        .tab-content.active { display: block; }
+        .tabs { 
+            display: flex; 
+            background: white; 
+            border-radius: var(--radius); 
+            margin-bottom: 20px; 
+            overflow: hidden; 
+            box-shadow: var(--shadow); 
+        }
+        .tab { 
+            flex: 1; 
+            padding: 15px; 
+            text-align: center; 
+            cursor: pointer; 
+            transition: var(--transition); 
+            font-weight: 600; 
+            font-size: 0.9rem; 
+            border: none;
+            background: none;
+            outline: none;
+        }
+        .tab.active { 
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark)); 
+            color: white; 
+        }
+        .tab-content { 
+            display: none; 
+        }
+        .tab-content.active { 
+            display: block; 
+            animation: fadeIn 0.3s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
         
         /* Menu Grid */
         .menu-grid {
@@ -71,13 +128,32 @@
             transition: var(--transition);
             border: 2px solid transparent;
         }
+        .menu-item:active {
+            transform: scale(0.98);
+        }
         .menu-item:hover {
             transform: translateY(-3px);
             border-color: var(--primary);
         }
-        .menu-icon { font-size: 1.8rem; color: var(--primary); margin-bottom: 8px; }
-        .menu-name { font-weight: 600; font-size: 0.95rem; margin-bottom: 5px; }
-        .menu-price { color: var(--primary); font-weight: 700; font-size: 1rem; }
+        .menu-icon { 
+            font-size: 1.8rem; 
+            color: var(--primary); 
+            margin-bottom: 8px; 
+        }
+        .menu-name { 
+            font-weight: 600; 
+            font-size: 0.95rem; 
+            margin-bottom: 5px; 
+            min-height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .menu-price { 
+            color: var(--primary); 
+            font-weight: 700; 
+            font-size: 1rem; 
+        }
         
         /* Order Section */
         .order-section {
@@ -86,14 +162,78 @@
             padding: 20px;
             margin-bottom: 20px;
             box-shadow: var(--shadow);
+            position: relative;
         }
-        .order-list { max-height: 250px; overflow-y: auto; margin-bottom: 15px; }
+        .order-section h2 {
+            color: #333;
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+        .order-list { 
+            max-height: 250px; 
+            overflow-y: auto; 
+            margin-bottom: 15px; 
+            -webkit-overflow-scrolling: touch;
+        }
         .order-item {
             display: flex;
             justify-content: space-between;
             align-items: center;
             padding: 12px 0;
             border-bottom: 1px solid #f5f5f5;
+            transition: background-color 0.2s;
+        }
+        .order-item:active {
+            background-color: #f9f9f9;
+        }
+        .order-item-info {
+            flex: 1;
+        }
+        .order-item-name {
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+        .order-item-details {
+            font-size: 0.85rem;
+            color: #777;
+            margin-top: 3px;
+        }
+        .order-item-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 0 15px;
+        }
+        .order-item-controls button {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            border: none;
+            background: var(--secondary);
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+        }
+        .order-item-controls .decrease {
+            background: var(--danger);
+        }
+        .order-item-quantity {
+            font-weight: 600;
+            min-width: 20px;
+            text-align: center;
+        }
+        .order-item-price {
+            font-weight: 700;
+            color: var(--primary);
+            min-width: 80px;
+            text-align: right;
+            font-size: 0.95rem;
         }
         .order-total {
             display: flex;
@@ -104,7 +244,22 @@
             font-weight: 700;
             font-size: 1.1rem;
         }
-        .total-amount { color: var(--primary); font-size: 1.3rem; }
+        .total-amount { 
+            color: var(--primary); 
+            font-size: 1.3rem; 
+        }
+        
+        /* Empty State */
+        .empty-order {
+            text-align: center;
+            padding: 30px 20px;
+            color: #999;
+        }
+        .empty-order i {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            opacity: 0.3;
+        }
         
         /* Buttons */
         .btn {
@@ -119,17 +274,68 @@
             align-items: center;
             gap: 8px;
             transition: var(--transition);
+            outline: none;
+            -webkit-appearance: none;
+        }
+        .btn:active {
+            transform: scale(0.98);
         }
         .btn-primary {
             background: linear-gradient(to right, var(--primary), var(--primary-dark));
             color: white;
         }
-        .btn:hover { opacity: 0.9; transform: translateY(-2px); }
+        .btn-secondary {
+            background: #f0f0f0;
+            color: #333;
+        }
+        .btn:hover { 
+            opacity: 0.9; 
+            transform: translateY(-2px); 
+        }
+        
+        /* Notification */
+        .notification {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--success);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            display: none;
+            z-index: 1000;
+            animation: slideIn 0.3s ease;
+        }
+        
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
         
         /* Responsive */
         @media (max-width: 480px) {
-            .menu-grid { grid-template-columns: repeat(2, 1fr); }
-            .header h1 { font-size: 1.5rem; }
+            .menu-grid { 
+                grid-template-columns: repeat(2, 1fr); 
+            }
+            .header h1 { 
+                font-size: 1.5rem; 
+            }
+            .order-item-controls button {
+                width: 35px;
+                height: 35px;
+            }
+        }
+        
+        /* Fix untuk iOS */
+        input, button, textarea, select {
+            font-size: 16px; /* Mencegah zoom di iOS */
         }
     </style>
 </head>
@@ -141,9 +347,9 @@
         </div>
         
         <div class="tabs">
-            <div class="tab active" onclick="switchTab('pos')">Kasir</div>
-            <div class="tab" onclick="switchTab('stats')">Statistik</div>
-            <div class="tab" onclick="switchTab('history')">Riwayat</div>
+            <button class="tab active" data-tab="pos">Kasir</button>
+            <button class="tab" data-tab="stats">Statistik</button>
+            <button class="tab" data-tab="history">Riwayat</button>
         </div>
         
         <!-- POS Tab -->
@@ -153,10 +359,11 @@
             </div>
             
             <div class="order-section">
-                <h2><i class="fas fa-shopping-cart"></i> Pesanan</h2>
+                <h2><i class="fas fa-shopping-cart"></i> Pesanan Aktif</h2>
                 <div class="order-list" id="orderList">
                     <div class="empty-order" id="emptyOrder">
-                        Belum ada pesanan
+                        <i class="fas fa-shopping-cart"></i>
+                        <p>Belum ada pesanan</p>
                     </div>
                 </div>
                 <div class="order-total">
@@ -166,11 +373,11 @@
             </div>
             
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
-                <button class="btn btn-primary" onclick="checkout()">
-                    <i class="fas fa-check"></i> Bayar
+                <button class="btn btn-secondary" id="clearBtn">
+                    <i class="fas fa-trash-alt"></i> Hapus Semua
                 </button>
-                <button class="btn" style="background: #f0f0f0;" onclick="clearOrder()">
-                    <i class="fas fa-trash"></i> Hapus
+                <button class="btn btn-primary" id="checkoutBtn">
+                    <i class="fas fa-check"></i> Bayar & Cetak
                 </button>
             </div>
         </div>
@@ -178,9 +385,12 @@
         <!-- Stats Tab -->
         <div class="tab-content" id="stats-tab">
             <div class="order-section">
-                <h2><i class="fas fa-chart-bar"></i> Statistik</h2>
-                <p>Total Pendapatan: <span id="totalRevenue">Rp 0</span></p>
-                <p>Total Transaksi: <span id="totalTransactions">0</span></p>
+                <h2><i class="fas fa-chart-bar"></i> Statistik Penjualan</h2>
+                <div style="margin: 20px 0;">
+                    <p>Total Pendapatan: <strong id="totalRevenue">Rp 0</strong></p>
+                    <p>Total Transaksi: <strong id="totalTransactions">0</strong></p>
+                    <p>Rata-rata per Transaksi: <strong id="avgTransaction">Rp 0</strong></p>
+                </div>
                 <canvas id="salesChart" height="200"></canvas>
             </div>
         </div>
@@ -188,18 +398,23 @@
         <!-- History Tab -->
         <div class="tab-content" id="history-tab">
             <div class="order-section">
-                <h2><i class="fas fa-history"></i> Riwayat</h2>
-                <div id="historyList">
-                    <!-- Riwayat akan diisi -->
+                <h2><i class="fas fa-history"></i> Riwayat Transaksi</h2>
+                <div style="max-height: 400px; overflow-y: auto;">
+                    <div id="historyList">
+                        <!-- Riwayat akan diisi -->
+                    </div>
                 </div>
             </div>
         </div>
     </div>
     
+    <!-- Notification -->
+    <div class="notification" id="notification"></div>
+    
     <script>
-        // === SEMUA JAVASCRIPT DI SINI (NO IMPORT/EXPORT) ===
+        // === SEMUA JAVASCRIPT DI SINI - FIXED VERSION ===
         
-        // Data produk Nyumil Dimsum
+        // ===== DATA & STATE =====
         const menuItems = [
             { id: 1, name: "Dimsum Ori Mentai (Small 3pcs)", price: 18000, icon: "fa-drumstick-bite", category: "paket" },
             { id: 2, name: "Dimsum Ori Mentai (Medium 6pcs)", price: 28000, icon: "fa-drumstick-bite", category: "paket" },
@@ -224,7 +439,7 @@
         let transactions = JSON.parse(localStorage.getItem('nyumil_transactions')) || [];
         let orderCounter = parseInt(localStorage.getItem('nyumil_orderCounter')) || 1000;
         
-        // Format Rupiah
+        // ===== UTILITY FUNCTIONS =====
         function formatRupiah(amount) {
             return new Intl.NumberFormat('id-ID', {
                 style: 'currency',
@@ -233,34 +448,50 @@
             }).format(amount);
         }
         
-        // Tab switching
-        function switchTab(tabName) {
-            // Update active tab
-            document.querySelectorAll('.tab').forEach(tab => {
-                tab.classList.remove('active');
-                if (tab.textContent.includes(tabName === 'pos' ? 'Kasir' : 
-                                            tabName === 'stats' ? 'Statistik' : 'Riwayat')) {
-                    tab.classList.add('active');
-                }
-            });
+        function showNotification(message, type = 'success') {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.style.background = type === 'success' ? '#2a9d8f' : 
+                                          type === 'error' ? '#e63946' : 
+                                          type === 'warning' ? '#e9c46a' : '#457b9d';
+            notification.style.display = 'block';
             
-            // Update active content
-            document.querySelectorAll('.tab-content').forEach(content => {
-                content.classList.remove('active');
-            });
-            document.getElementById(tabName + '-tab').classList.add('active');
-            
-            // Load data jika statistik
-            if (tabName === 'stats') {
-                updateStats();
-                renderChart();
-            }
-            if (tabName === 'history') {
-                loadHistory();
-            }
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 3000);
         }
         
-        // Render menu items
+        // ===== TAB MANAGEMENT =====
+        function setupTabs() {
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.addEventListener('click', function() {
+                    const tabName = this.getAttribute('data-tab');
+                    
+                    // Update active tab
+                    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // Update active content
+                    document.querySelectorAll('.tab-content').forEach(content => {
+                        content.classList.remove('active');
+                    });
+                    document.getElementById(tabName + '-tab').classList.add('active');
+                    
+                    // Load data for tab
+                    switch(tabName) {
+                        case 'stats':
+                            updateStats();
+                            renderChart();
+                            break;
+                        case 'history':
+                            loadHistory();
+                            break;
+                    }
+                });
+            });
+        }
+        
+        // ===== MENU RENDERING =====
         function renderMenu() {
             const menuGrid = document.getElementById('menuGrid');
             menuGrid.innerHTML = '';
@@ -275,32 +506,36 @@
                     <div class="menu-name">${item.name}</div>
                     <div class="menu-price">${formatRupiah(item.price)}</div>
                 `;
-                div.onclick = () => addToOrder(item);
+                
+                // Gunakan event delegation atau langsung attach
+                div.addEventListener('click', () => addToOrder(item));
                 menuGrid.appendChild(div);
             });
         }
         
-        // Add to order
+        // ===== ORDER MANAGEMENT - FIXED =====
         function addToOrder(item) {
             const existing = currentOrder.find(i => i.id === item.id);
+            
             if (existing) {
-                existing.quantity++;
+                existing.quantity += 1;
             } else {
                 currentOrder.push({
                     ...item,
                     quantity: 1
                 });
             }
+            
             updateOrderDisplay();
             showNotification(`${item.name} ditambahkan`);
         }
         
-        // Update order display
         function updateOrderDisplay() {
             const orderList = document.getElementById('orderList');
             const emptyOrder = document.getElementById('emptyOrder');
             const totalAmount = document.getElementById('totalAmount');
             
+            // Clear previous listeners first
             orderList.innerHTML = '';
             
             if (currentOrder.length === 0) {
@@ -317,162 +552,259 @@
                 const itemTotal = item.price * item.quantity;
                 total += itemTotal;
                 
-                const div = document.createElement('div');
-                div.className = 'order-item';
-                div.innerHTML = `
-                    <div>
-                        <strong>${item.name}</strong><br>
-                        <small>${formatRupiah(item.price)} × ${item.quantity}</small>
+                const orderItem = document.createElement('div');
+                orderItem.className = 'order-item';
+                orderItem.innerHTML = `
+                    <div class="order-item-info">
+                        <div class="order-item-name">${item.name}</div>
+                        <div class="order-item-details">
+                            ${formatRupiah(item.price)} × ${item.quantity}
+                        </div>
                     </div>
-                    <div>
-                        <button onclick="updateQuantity(${item.id}, -1)">-</button>
-                        <span style="margin: 0 10px;">${item.quantity}</span>
-                        <button onclick="updateQuantity(${item.id}, 1)">+</button>
+                    <div class="order-item-controls">
+                        <button class="decrease" data-id="${item.id}">-</button>
+                        <span class="order-item-quantity">${item.quantity}</span>
+                        <button class="increase" data-id="${item.id}">+</button>
                     </div>
-                    <div><strong>${formatRupiah(itemTotal)}</strong></div>
+                    <div class="order-item-price">${formatRupiah(itemTotal)}</div>
                 `;
-                orderList.appendChild(div);
+                
+                orderList.appendChild(orderItem);
             });
+            
+            // Attach event listeners using event delegation
+            attachOrderEventListeners();
             
             totalAmount.textContent = formatRupiah(total);
         }
         
-        // Update quantity
-        function updateQuantity(id, change) {
-            const item = currentOrder.find(i => i.id === id);
-            if (item) {
-                item.quantity += change;
-                if (item.quantity <= 0) {
-                    currentOrder = currentOrder.filter(i => i.id !== id);
+        function attachOrderEventListeners() {
+            const orderList = document.getElementById('orderList');
+            
+            // Event delegation untuk tombol +/-
+            orderList.addEventListener('click', function(e) {
+                const target = e.target;
+                
+                if (target.classList.contains('increase') || target.classList.contains('decrease')) {
+                    const itemId = parseInt(target.getAttribute('data-id'));
+                    const isIncrease = target.classList.contains('increase');
+                    
+                    updateQuantity(itemId, isIncrease ? 1 : -1);
+                    e.stopPropagation(); // Prevent event bubbling
                 }
-                updateOrderDisplay();
-            }
+            });
         }
         
-        // Clear order
+        function updateQuantity(itemId, change) {
+            const item = currentOrder.find(i => i.id === itemId);
+            if (!item) return;
+            
+            item.quantity += change;
+            
+            if (item.quantity <= 0) {
+                currentOrder = currentOrder.filter(i => i.id !== itemId);
+                showNotification('Item dihapus dari pesanan');
+            }
+            
+            updateOrderDisplay();
+        }
+        
         function clearOrder() {
-            if (currentOrder.length === 0) return;
+            if (currentOrder.length === 0) {
+                showNotification('Tidak ada pesanan untuk dihapus', 'warning');
+                return;
+            }
+            
             if (confirm('Hapus semua pesanan?')) {
                 currentOrder = [];
                 updateOrderDisplay();
-                showNotification('Pesanan dihapus');
+                showNotification('Semua pesanan telah dihapus');
             }
         }
         
-        // Checkout
+        // ===== CHECKOUT & RECEIPT =====
         function checkout() {
             if (currentOrder.length === 0) {
-                alert('Belum ada pesanan!');
+                showNotification('Belum ada pesanan!', 'error');
                 return;
             }
             
             const total = currentOrder.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-            const cash = prompt(`Total: ${formatRupiah(total)}\nMasukkan jumlah uang:`, total);
             
-            if (!cash) return;
+            // Modal sederhana untuk pembayaran
+            const paymentAmount = prompt(
+                `🛒 TOTAL PESANAN: ${formatRupiah(total)}\n\n` +
+                `Masukkan jumlah uang yang dibayarkan:`,
+                total
+            );
             
-            const cashAmount = parseInt(cash);
-            if (cashAmount < total) {
-                alert('Uang kurang!');
+            if (!paymentAmount || isNaN(paymentAmount)) {
+                showNotification('Pembayaran dibatalkan', 'warning');
                 return;
             }
+            
+            const cash = parseInt(paymentAmount);
+            if (cash < total) {
+                showNotification(`Uang kurang! Kurang ${formatRupiah(total - cash)}`, 'error');
+                return;
+            }
+            
+            const change = cash - total;
             
             // Save transaction
             const transaction = {
                 id: orderCounter++,
                 date: new Date().toLocaleDateString('id-ID'),
-                time: new Date().toLocaleTimeString('id-ID'),
-                items: currentOrder,
+                time: new Date().toLocaleTimeString('id-ID', { 
+                    hour: '2-digit', 
+                    minute: '2-digit' 
+                }),
+                items: [...currentOrder], // Copy array
                 total: total,
-                cash: cashAmount,
-                change: cashAmount - total
+                cash: cash,
+                change: change
             };
             
             transactions.push(transaction);
-            localStorage.setItem('nyumil_transactions', JSON.stringify(transactions));
-            localStorage.setItem('nyumil_orderCounter', orderCounter.toString());
+            saveToLocalStorage();
             
             // Show receipt
-            showReceipt(transaction);
+            generateReceipt(transaction);
             
             // Clear order
             currentOrder = [];
             updateOrderDisplay();
             
-            showNotification('Transaksi berhasil!');
+            showNotification(`Transaksi #${transaction.id} berhasil! Kembali: ${formatRupiah(change)}`);
         }
         
-        // Show receipt
-        function showReceipt(transaction) {
+        function generateReceipt(transaction) {
             let receipt = '='.repeat(32) + '\n';
             receipt += '       NYUMIL DIMSUM\n';
+            receipt += '  Special Dimsum dengan Mentai\n';
             receipt += '='.repeat(32) + '\n';
             receipt += `Tanggal: ${transaction.date}\n`;
             receipt += `Waktu: ${transaction.time}\n`;
-            receipt += `No. Trans: ${transaction.id}\n`;
+            receipt += `No. Transaksi: ${transaction.id}\n`;
+            receipt += '-'.repeat(32) + '\n';
+            receipt += '        DAFTAR PESANAN\n';
             receipt += '-'.repeat(32) + '\n';
             
             transaction.items.forEach(item => {
-                receipt += `${item.name.substring(0, 20)}\n`;
-                receipt += `  ${item.quantity} x ${formatRupiah(item.price)} = ${formatRupiah(item.price * item.quantity)}\n`;
+                const name = item.name.length > 22 ? item.name.substring(0, 19) + '...' : item.name;
+                receipt += `${name}\n`;
+                receipt += `  ${item.quantity} x ${formatRupiah(item.price).replace('Rp', '').padStart(8)} = ${formatRupiah(item.price * item.quantity).replace('Rp', '')}\n`;
             });
             
             receipt += '-'.repeat(32) + '\n';
-            receipt += `TOTAL: ${formatRupiah(transaction.total)}\n`;
-            receipt += `BAYAR: ${formatRupiah(transaction.cash)}\n`;
-            receipt += `KEMBALI: ${formatRupiah(transaction.change)}\n`;
+            receipt += `TOTAL: ${formatRupiah(transaction.total).replace('Rp', '').padStart(27)}\n`;
+            receipt += `BAYAR: ${formatRupiah(transaction.cash).replace('Rp', '').padStart(27)}\n`;
+            receipt += `KEMBALI: ${formatRupiah(transaction.change).replace('Rp', '').padStart(25)}\n`;
             receipt += '='.repeat(32) + '\n';
-            receipt += 'Terima kasih!\n';
+            receipt += 'Terima kasih atas pesanannya!\n';
+            receipt += '='.repeat(32) + '\n';
             
-            if (confirm('Cetak struk?')) {
-                const printWindow = window.open('', '_blank');
-                printWindow.document.write('<pre>' + receipt + '</pre>');
-                printWindow.document.close();
-                printWindow.print();
+            // Show receipt and ask for print
+            if (confirm('Transaksi berhasil! Cetak struk?')) {
+                printReceipt(receipt);
             }
         }
         
-        // Update stats
-        function updateStats() {
-            const totalRevenue = transactions.reduce((sum, t) => sum + t.total, 0);
-            document.getElementById('totalRevenue').textContent = formatRupiah(totalRevenue);
-            document.getElementById('totalTransactions').textContent = transactions.length;
+        function printReceipt(receiptContent) {
+            const printWindow = window.open('', '_blank');
+            printWindow.document.write(`
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <title>Cetak Struk</title>
+                    <style>
+                        body {
+                            font-family: 'Courier New', monospace;
+                            font-size: 12px;
+                            width: 80mm;
+                            margin: 0;
+                            padding: 10px;
+                            line-height: 1.3;
+                        }
+                        @media print {
+                            body { margin: 0; padding: 0; }
+                        }
+                    </style>
+                </head>
+                <body onload="window.print(); setTimeout(() => window.close(), 1000);">
+                    <pre>${receiptContent}</pre>
+                </body>
+                </html>
+            `);
+            printWindow.document.close();
         }
         
-        // Render chart
+        // ===== STATISTICS =====
+        function updateStats() {
+            const totalRevenue = transactions.reduce((sum, t) => sum + t.total, 0);
+            const avgTransaction = transactions.length > 0 ? totalRevenue / transactions.length : 0;
+            
+            document.getElementById('totalRevenue').textContent = formatRupiah(totalRevenue);
+            document.getElementById('totalTransactions').textContent = transactions.length;
+            document.getElementById('avgTransaction').textContent = formatRupiah(avgTransaction);
+        }
+        
         function renderChart() {
             const ctx = document.getElementById('salesChart')?.getContext('2d');
-            if (!ctx) return;
+            if (!ctx || transactions.length === 0) return;
             
-            // Group by date
-            const dailyData = {};
+            // Group by date (last 7 days)
+            const today = new Date();
+            const last7Days = {};
+            
+            for (let i = 6; i >= 0; i--) {
+                const date = new Date(today);
+                date.setDate(date.getDate() - i);
+                const dateStr = date.toLocaleDateString('id-ID');
+                last7Days[dateStr] = 0;
+            }
+            
+            // Fill with actual data
             transactions.forEach(t => {
-                if (!dailyData[t.date]) dailyData[t.date] = 0;
-                dailyData[t.date] += t.total;
+                if (last7Days[t.date] !== undefined) {
+                    last7Days[t.date] += t.total;
+                }
             });
             
-            const labels = Object.keys(dailyData).slice(-7); // Last 7 days
-            const data = labels.map(date => dailyData[date]);
+            const labels = Object.keys(last7Days);
+            const data = Object.values(last7Days);
             
-            new Chart(ctx, {
-                type: 'line',
+            // Destroy existing chart if any
+            if (window.salesChart) {
+                window.salesChart.destroy();
+            }
+            
+            window.salesChart = new Chart(ctx, {
+                type: 'bar',
                 data: {
-                    labels: labels,
+                    labels: labels.map(d => d.split('/').slice(0, 2).join('/')),
                     datasets: [{
                         label: 'Pendapatan',
                         data: data,
+                        backgroundColor: 'rgba(230, 57, 70, 0.5)',
                         borderColor: '#e63946',
-                        backgroundColor: 'rgba(230, 57, 70, 0.1)',
-                        fill: true
+                        borderWidth: 1
                     }]
                 },
                 options: {
                     responsive: true,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
                     scales: {
                         y: {
                             beginAtZero: true,
                             ticks: {
-                                callback: value => 'Rp' + (value/1000).toFixed(0) + 'k'
+                                callback: function(value) {
+                                    return 'Rp' + (value/1000).toFixed(0) + 'k';
+                                }
                             }
                         }
                     }
@@ -480,47 +812,102 @@
             });
         }
         
-        // Load history
+        // ===== HISTORY =====
         function loadHistory() {
             const historyList = document.getElementById('historyList');
             if (!historyList) return;
             
             if (transactions.length === 0) {
-                historyList.innerHTML = '<p>Belum ada transaksi</p>';
+                historyList.innerHTML = `
+                    <div class="empty-order">
+                        <i class="fas fa-history"></i>
+                        <p>Belum ada transaksi</p>
+                    </div>
+                `;
                 return;
             }
             
-            historyList.innerHTML = transactions.slice().reverse().map(t => `
-                <div style="border-bottom: 1px solid #eee; padding: 10px 0;">
-                    <strong>#${t.id} - ${t.date} ${t.time}</strong><br>
-                    <small>${t.items.map(i => `${i.name} (${i.quantity})`).join(', ')}</small><br>
-                    <strong>${formatRupiah(t.total)}</strong>
+            // Sort by date (newest first)
+            const sortedTransactions = [...transactions].sort((a, b) => {
+                return new Date(b.date + ' ' + b.time) - new Date(a.date + ' ' + a.time);
+            });
+            
+            historyList.innerHTML = sortedTransactions.map(t => `
+                <div class="order-item" style="border: 1px solid #eee; border-radius: 8px; margin-bottom: 10px; padding: 15px;">
+                    <div style="flex: 1;">
+                        <div style="font-weight: 600; color: #333;">
+                            #${t.id} - ${t.date} ${t.time}
+                        </div>
+                        <div style="font-size: 0.9rem; color: #666; margin-top: 5px;">
+                            ${t.items.map(i => `${i.name} (${i.quantity})`).join(', ')}
+                        </div>
+                        ${t.cash ? `
+                            <div style="font-size: 0.85rem; color: #777; margin-top: 3px;">
+                                Bayar: ${formatRupiah(t.cash)} | Kembali: ${formatRupiah(t.change)}
+                            </div>
+                        ` : ''}
+                    </div>
+                    <div style="font-weight: 700; color: #e63946;">
+                        ${formatRupiah(t.total)}
+                    </div>
                 </div>
             `).join('');
         }
         
-        // Show notification
-        function showNotification(message) {
-            // Simple alert for now
-            console.log('Notification:', message);
+        // ===== LOCAL STORAGE =====
+        function saveToLocalStorage() {
+            localStorage.setItem('nyumil_transactions', JSON.stringify(transactions));
+            localStorage.setItem('nyumil_orderCounter', orderCounter.toString());
         }
         
-        // Initialize app
+        // ===== INITIALIZATION =====
         function initApp() {
+            // Setup event listeners
+            setupTabs();
+            
+            // Setup button listeners
+            document.getElementById('clearBtn').addEventListener('click', clearOrder);
+            document.getElementById('checkoutBtn').addEventListener('click', checkout);
+            
+            // Render initial state
             renderMenu();
             updateOrderDisplay();
             updateStats();
             
-            // Auto switch to stats if no order for demo
-            if (transactions.length > 0 && currentOrder.length === 0) {
-                setTimeout(() => switchTab('stats'), 1000);
+            // Add some sample data for demo if empty
+            if (transactions.length === 0) {
+                // Add sample transaction for demo
+                const sampleTransaction = {
+                    id: orderCounter++,
+                    date: new Date().toLocaleDateString('id-ID'),
+                    time: "10:30",
+                    items: [
+                        { id: 1, name: "Dimsum Ori Mentai (Small 3pcs)", price: 18000, quantity: 2 },
+                        { id: 13, name: "Mozzarella", price: 1000, quantity: 1 }
+                    ],
+                    total: 37000,
+                    cash: 50000,
+                    change: 13000
+                };
+                transactions.push(sampleTransaction);
+                saveToLocalStorage();
             }
             
-            console.log('Nyumil Kasir berhasil dijalankan!');
+            console.log('Nyumil Kasir initialized successfully!');
+            showNotification('Aplikasi siap digunakan!');
         }
         
         // Start app when page loads
         document.addEventListener('DOMContentLoaded', initApp);
+        
+        // Prevent accidental refresh
+        window.addEventListener('beforeunload', function(e) {
+            if (currentOrder.length > 0) {
+                e.preventDefault();
+                e.returnValue = 'Anda memiliki pesanan yang belum disimpan. Yakin ingin meninggalkan halaman?';
+                return e.returnValue;
+            }
+        });
     </script>
 </body>
 </html>
