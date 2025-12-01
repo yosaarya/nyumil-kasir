@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Nyumil Dimsum Kasir</title>
+    
+    <!-- Icons & Fonts -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <style>
+        /* === SEMUA CSS DI SINI === */
+        :root {
+            --primary: #e63946;
+            --primary-dark: #c1121f;
+            --secondary: #457b9d;
+            --success: #2a9d8f;
+            --warning: #e9c46a;
+            --danger: #e63946;
+            --dark: #1d3557;
+            --light: #f1faee;
+            --gray: #6c757d;
+            --gray-light: #f8f9fa;
+            --radius: 12px;
+            --shadow: 0 4px 12px rgba(0,0,0,0.1);
+            --transition: all 0.3s ease;
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Poppins', sans-serif; background: var(--gray-light); color: #333; line-height: 1.6; }
+        .container { max-width: 100%; margin: 0 auto; padding: 15px; }
+        
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            padding: 20px;
+            border-radius: var(--radius);
+            margin-bottom: 20px;
+            box-shadow: var(--shadow);
+            text-align: center;
+        }
+        .header h1 { font-size: 1.8rem; margin-bottom: 5px; }
+        .header p { opacity: 0.9; font-size: 0.9rem; }
+        
+        /* Tabs */
+        .tabs { display: flex; background: white; border-radius: var(--radius); margin-bottom: 20px; overflow: hidden; box-shadow: var(--shadow); }
+        .tab { flex: 1; padding: 15px; text-align: center; cursor: pointer; transition: var(--transition); font-weight: 600; font-size: 0.9rem; }
+        .tab.active { background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: white; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        
+        /* Menu Grid */
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        .menu-item {
+            background: white;
+            border-radius: var(--radius);
+            padding: 15px;
+            box-shadow: var(--shadow);
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+            border: 2px solid transparent;
+        }
+        .menu-item:hover {
+            transform: translateY(-3px);
+            border-color: var(--primary);
+        }
+        .menu-icon { font-size: 1.8rem; color: var(--primary); margin-bottom: 8px; }
+        .menu-name { font-weight: 600; font-size: 0.95rem; margin-bottom: 5px; }
+        .menu-price { color: var(--primary); font-weight: 700; font-size: 1rem; }
+        
+        /* Order Section */
+        .order-section {
+            background: white;
+            border-radius: var(--radius);
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow);
+        }
+        .order-list { max-height: 250px; overflow-y: auto; margin-bottom: 15px; }
+        .order-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #f5f5f5;
+        }
+        .order-total {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 15px;
+            border-top: 2px dashed #ddd;
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+        .total-amount { color: var(--primary); font-size: 1.3rem; }
+        
+        /* Buttons */
+        .btn {
+            padding: 14px;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            transition: var(--transition);
+        }
+        .btn-primary {
+            background: linear-gradient(to right, var(--primary), var(--primary-dark));
+            color: white;
+        }
+        .btn:hover { opacity: 0.9; transform: translateY(-2px); }
+        
+        /* Responsive */
+        @media (max-width: 480px) {
+            .menu-grid { grid-template-columns: repeat(2, 1fr); }
+            .header h1 { font-size: 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-utensils"></i> Nyumil Dimsum Kasir</h1>
+            <p>Aplikasi kasir siap pakai</p>
+        </div>
+        
+        <div class="tabs">
+            <div class="tab active" onclick="switchTab('pos')">Kasir</div>
+            <div class="tab" onclick="switchTab('stats')">Statistik</div>
+            <div class="tab" onclick="switchTab('history')">Riwayat</div>
+        </div>
+        
+        <!-- POS Tab -->
+        <div class="tab-content active" id="pos-tab">
+            <div class="menu-grid" id="menuGrid">
+                <!-- Menu items akan diisi JavaScript -->
+            </div>
+            
+            <div class="order-section">
+                <h2><i class="fas fa-shopping-cart"></i> Pesanan</h2>
+                <div class="order-list" id="orderList">
+                    <div class="empty-order" id="emptyOrder">
+                        Belum ada pesanan
+                    </div>
+                </div>
+                <div class="order-total">
+                    <span>Total:</span>
+                    <span class="total-amount" id="totalAmount">Rp 0</span>
+                </div>
+            </div>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                <button class="btn btn-primary" onclick="checkout()">
+                    <i class="fas fa-check"></i> Bayar
+                </button>
+                <button class="btn" style="background: #f0f0f0;" onclick="clearOrder()">
+                    <i class="fas fa-trash"></i> Hapus
+                </button>
+            </div>
+        </div>
+        
+        <!-- Stats Tab -->
+        <div class="tab-content" id="stats-tab">
+            <div class="order-section">
+                <h2><i class="fas fa-chart-bar"></i> Statistik</h2>
+                <p>Total Pendapatan: <span id="totalRevenue">Rp 0</span></p>
+                <p>Total Transaksi: <span id="totalTransactions">0</span></p>
+                <canvas id="salesChart" height="200"></canvas>
+            </div>
+        </div>
+        
+        <!-- History Tab -->
+        <div class="tab-content" id="history-tab">
+            <div class="order-section">
+                <h2><i class="fas fa-history"></i> Riwayat</h2>
+                <div id="historyList">
+                    <!-- Riwayat akan diisi -->
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // === SEMUA JAVASCRIPT DI SINI (NO IMPORT/EXPORT) ===
+        
+        // Data produk Nyumil Dimsum
+        const menuItems = [
+            { id: 1, name: "Dimsum Ori Mentai (Small 3pcs)", price: 18000, icon: "fa-drumstick-bite", category: "paket" },
+            { id: 2, name: "Dimsum Ori Mentai (Medium 6pcs)", price: 28000, icon: "fa-drumstick-bite", category: "paket" },
+            { id: 3, name: "Dimsum Ori Mentai (Large 16pcs)", price: 75000, icon: "fa-drumstick-bite", category: "paket" },
+            { id: 4, name: "Dimmoza Mentai (Small 3pcs)", price: 21000, icon: "fa-cheese", category: "paket" },
+            { id: 5, name: "Dimsum Mentai Cheesy (Small 3pcs)", price: 21000, icon: "fa-cheese", category: "paket" },
+            { id: 6, name: "Dimsum Mentai Double Cheesy (Small 3pcs)", price: 24000, icon: "fa-cheese", category: "paket" },
+            { id: 7, name: "Dimsum Mentai Tobiko Cheesy (Small 3pcs)", price: 23000, icon: "fa-fish", category: "paket" },
+            { id: 8, name: "Gyoza Mentai (Small 5pcs)", price: 18000, icon: "fa-dumpling", category: "paket" },
+            { id: 9, name: "Gyoza Mentai (Medium 8pcs)", price: 24000, icon: "fa-dumpling", category: "paket" },
+            { id: 10, name: "Dimsum Ori (Satuan)", price: 3000, icon: "fa-utensils", category: "satuan" },
+            { id: 11, name: "Dimmoza (Satuan)", price: 4000, icon: "fa-cheese", category: "satuan" },
+            { id: 12, name: "Gyoza (Satuan)", price: 2000, icon: "fa-dumpling", category: "satuan" },
+            { id: 13, name: "Mozzarella", price: 1000, icon: "fa-cheese", category: "topping" },
+            { id: 14, name: "Tobiko", price: 3000, icon: "fa-fish", category: "topping" },
+            { id: 15, name: "Creamy Bolognese 50ml", price: 7000, icon: "fa-wine-bottle", category: "saus" },
+            { id: 16, name: "Creamy Bolognese 80ml", price: 10000, icon: "fa-wine-bottle", category: "saus" }
+        ];
+        
+        // State aplikasi
+        let currentOrder = [];
+        let transactions = JSON.parse(localStorage.getItem('nyumil_transactions')) || [];
+        let orderCounter = parseInt(localStorage.getItem('nyumil_orderCounter')) || 1000;
+        
+        // Format Rupiah
+        function formatRupiah(amount) {
+            return new Intl.NumberFormat('id-ID', {
+                style: 'currency',
+                currency: 'IDR',
+                minimumFractionDigits: 0
+            }).format(amount);
+        }
+        
+        // Tab switching
+        function switchTab(tabName) {
+            // Update active tab
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+                if (tab.textContent.includes(tabName === 'pos' ? 'Kasir' : 
+                                            tabName === 'stats' ? 'Statistik' : 'Riwayat')) {
+                    tab.classList.add('active');
+                }
+            });
+            
+            // Update active content
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            document.getElementById(tabName + '-tab').classList.add('active');
+            
+            // Load data jika statistik
+            if (tabName === 'stats') {
+                updateStats();
+                renderChart();
+            }
+            if (tabName === 'history') {
+                loadHistory();
+            }
+        }
+        
+        // Render menu items
+        function renderMenu() {
+            const menuGrid = document.getElementById('menuGrid');
+            menuGrid.innerHTML = '';
+            
+            menuItems.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'menu-item';
+                div.innerHTML = `
+                    <div class="menu-icon">
+                        <i class="fas ${item.icon}"></i>
+                    </div>
+                    <div class="menu-name">${item.name}</div>
+                    <div class="menu-price">${formatRupiah(item.price)}</div>
+                `;
+                div.onclick = () => addToOrder(item);
+                menuGrid.appendChild(div);
+            });
+        }
+        
+        // Add to order
+        function addToOrder(item) {
+            const existing = currentOrder.find(i => i.id === item.id);
+            if (existing) {
+                existing.quantity++;
+            } else {
+                currentOrder.push({
+                    ...item,
+                    quantity: 1
+                });
+            }
+            updateOrderDisplay();
+            showNotification(`${item.name} ditambahkan`);
+        }
+        
+        // Update order display
+        function updateOrderDisplay() {
+            const orderList = document.getElementById('orderList');
+            const emptyOrder = document.getElementById('emptyOrder');
+            const totalAmount = document.getElementById('totalAmount');
+            
+            orderList.innerHTML = '';
+            
+            if (currentOrder.length === 0) {
+                emptyOrder.style.display = 'block';
+                orderList.appendChild(emptyOrder);
+                totalAmount.textContent = formatRupiah(0);
+                return;
+            }
+            
+            emptyOrder.style.display = 'none';
+            let total = 0;
+            
+            currentOrder.forEach(item => {
+                const itemTotal = item.price * item.quantity;
+                total += itemTotal;
+                
+                const div = document.createElement('div');
+                div.className = 'order-item';
+                div.innerHTML = `
+                    <div>
+                        <strong>${item.name}</strong><br>
+                        <small>${formatRupiah(item.price)} × ${item.quantity}</small>
+                    </div>
+                    <div>
+                        <button onclick="updateQuantity(${item.id}, -1)">-</button>
+                        <span style="margin: 0 10px;">${item.quantity}</span>
+                        <button onclick="updateQuantity(${item.id}, 1)">+</button>
+                    </div>
+                    <div><strong>${formatRupiah(itemTotal)}</strong></div>
+                `;
+                orderList.appendChild(div);
+            });
+            
+            totalAmount.textContent = formatRupiah(total);
+        }
+        
+        // Update quantity
+        function updateQuantity(id, change) {
+            const item = currentOrder.find(i => i.id === id);
+            if (item) {
+                item.quantity += change;
+                if (item.quantity <= 0) {
+                    currentOrder = currentOrder.filter(i => i.id !== id);
+                }
+                updateOrderDisplay();
+            }
+        }
+        
+        // Clear order
+        function clearOrder() {
+            if (currentOrder.length === 0) return;
+            if (confirm('Hapus semua pesanan?')) {
+                currentOrder = [];
+                updateOrderDisplay();
+                showNotification('Pesanan dihapus');
+            }
+        }
+        
+        // Checkout
+        function checkout() {
+            if (currentOrder.length === 0) {
+                alert('Belum ada pesanan!');
+                return;
+            }
+            
+            const total = currentOrder.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            const cash = prompt(`Total: ${formatRupiah(total)}\nMasukkan jumlah uang:`, total);
+            
+            if (!cash) return;
+            
+            const cashAmount = parseInt(cash);
+            if (cashAmount < total) {
+                alert('Uang kurang!');
+                return;
+            }
+            
+            // Save transaction
+            const transaction = {
+                id: orderCounter++,
+                date: new Date().toLocaleDateString('id-ID'),
+                time: new Date().toLocaleTimeString('id-ID'),
+                items: currentOrder,
+                total: total,
+                cash: cashAmount,
+                change: cashAmount - total
+            };
+            
+            transactions.push(transaction);
+            localStorage.setItem('nyumil_transactions', JSON.stringify(transactions));
+            localStorage.setItem('nyumil_orderCounter', orderCounter.toString());
+            
+            // Show receipt
+            showReceipt(transaction);
+            
+            // Clear order
+            currentOrder = [];
+            updateOrderDisplay();
+            
+            showNotification('Transaksi berhasil!');
+        }
+        
+        // Show receipt
+        function showReceipt(transaction) {
+            let receipt = '='.repeat(32) + '\n';
+            receipt += '       NYUMIL DIMSUM\n';
+            receipt += '='.repeat(32) + '\n';
+            receipt += `Tanggal: ${transaction.date}\n`;
+            receipt += `Waktu: ${transaction.time}\n`;
+            receipt += `No. Trans: ${transaction.id}\n`;
+            receipt += '-'.repeat(32) + '\n';
+            
+            transaction.items.forEach(item => {
+                receipt += `${item.name.substring(0, 20)}\n`;
+                receipt += `  ${item.quantity} x ${formatRupiah(item.price)} = ${formatRupiah(item.price * item.quantity)}\n`;
+            });
+            
+            receipt += '-'.repeat(32) + '\n';
+            receipt += `TOTAL: ${formatRupiah(transaction.total)}\n`;
+            receipt += `BAYAR: ${formatRupiah(transaction.cash)}\n`;
+            receipt += `KEMBALI: ${formatRupiah(transaction.change)}\n`;
+            receipt += '='.repeat(32) + '\n';
+            receipt += 'Terima kasih!\n';
+            
+            if (confirm('Cetak struk?')) {
+                const printWindow = window.open('', '_blank');
+                printWindow.document.write('<pre>' + receipt + '</pre>');
+                printWindow.document.close();
+                printWindow.print();
+            }
+        }
+        
+        // Update stats
+        function updateStats() {
+            const totalRevenue = transactions.reduce((sum, t) => sum + t.total, 0);
+            document.getElementById('totalRevenue').textContent = formatRupiah(totalRevenue);
+            document.getElementById('totalTransactions').textContent = transactions.length;
+        }
+        
+        // Render chart
+        function renderChart() {
+            const ctx = document.getElementById('salesChart')?.getContext('2d');
+            if (!ctx) return;
+            
+            // Group by date
+            const dailyData = {};
+            transactions.forEach(t => {
+                if (!dailyData[t.date]) dailyData[t.date] = 0;
+                dailyData[t.date] += t.total;
+            });
+            
+            const labels = Object.keys(dailyData).slice(-7); // Last 7 days
+            const data = labels.map(date => dailyData[date]);
+            
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Pendapatan',
+                        data: data,
+                        borderColor: '#e63946',
+                        backgroundColor: 'rgba(230, 57, 70, 0.1)',
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: value => 'Rp' + (value/1000).toFixed(0) + 'k'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        
+        // Load history
+        function loadHistory() {
+            const historyList = document.getElementById('historyList');
+            if (!historyList) return;
+            
+            if (transactions.length === 0) {
+                historyList.innerHTML = '<p>Belum ada transaksi</p>';
+                return;
+            }
+            
+            historyList.innerHTML = transactions.slice().reverse().map(t => `
+                <div style="border-bottom: 1px solid #eee; padding: 10px 0;">
+                    <strong>#${t.id} - ${t.date} ${t.time}</strong><br>
+                    <small>${t.items.map(i => `${i.name} (${i.quantity})`).join(', ')}</small><br>
+                    <strong>${formatRupiah(t.total)}</strong>
+                </div>
+            `).join('');
+        }
+        
+        // Show notification
+        function showNotification(message) {
+            // Simple alert for now
+            console.log('Notification:', message);
+        }
+        
+        // Initialize app
+        function initApp() {
+            renderMenu();
+            updateOrderDisplay();
+            updateStats();
+            
+            // Auto switch to stats if no order for demo
+            if (transactions.length > 0 && currentOrder.length === 0) {
+                setTimeout(() => switchTab('stats'), 1000);
+            }
+            
+            console.log('Nyumil Kasir berhasil dijalankan!');
+        }
+        
+        // Start app when page loads
+        document.addEventListener('DOMContentLoaded', initApp);
+    </script>
+</body>
+</html>
